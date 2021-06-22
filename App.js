@@ -1,6 +1,13 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
-import { StyleSheet, Text, View, ScrollView, FlatList } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 
 export default function App() {
   const [people, setPeople] = useState([
@@ -15,6 +22,16 @@ export default function App() {
 
   console.log(people);
 
+  const presshandler = (id) => {
+    console.log(`pressed a button with an id of ${id}`);
+    // let filteredPeople = people.filter((item) => item.id !== id);
+    // setPeople(filteredPeople); better to use prevState
+
+    setPeople((prevPeople) => {
+      return prevPeople.filter((item) => item.id !== id);
+    });
+  };
+
   return (
     <View style={styles.container}>
       <Text>JAGI FAMILY</Text>
@@ -27,7 +44,11 @@ export default function App() {
         // this is used if there is no key property. indicate the property you want to
         // be used as key. in this case the id like in most databases you will use
         data={people}
-        renderItem={({ item }) => <Text style={styles.item}>{item.name}</Text>}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => presshandler(item.id)}>
+            <Text style={styles.item}>{item.name}</Text>
+          </TouchableOpacity>
+        )}
       />
 
       {/* flatlists lazy loads so its better for more items on the list - performance */}
