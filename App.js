@@ -1,67 +1,51 @@
-import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
   FlatList,
-  TouchableOpacity,
+  TextInput,
+  Button,
 } from "react-native";
+import Header from "./components/Header";
+import TodoItem from "./components/TodoItem";
+import AddTodo from "./components/AddTodo";
 
 export default function App() {
-  const [people, setPeople] = useState([
-    { name: "Alvin", id: 1 },
-    { name: "Pauline", id: 2 },
-    { name: "Pablo", id: 3 },
-    { name: "Kieran", id: 4 },
-    { name: "Thea", id: 5 },
-    { name: "Juts", id: 6 },
-    { name: "Randy", id: 7 },
+  const [todos, setTodos] = useState([
+    { text: "Create an app", key: "1" },
+    { text: "Upload to app store", key: "2" },
+    { text: "Study some more", key: "3" },
   ]);
 
-  console.log(people);
+  const handleSubmit = (text) => {
+    console.log("add todo!");
 
-  const presshandler = (id) => {
-    console.log(`pressed a button with an id of ${id}`);
-    // let filteredPeople = people.filter((item) => item.id !== id);
-    // setPeople(filteredPeople); better to use prevState
-
-    setPeople((prevPeople) => {
-      return prevPeople.filter((item) => item.id !== id);
+    setTodos((prevTodos) => {
+      return [...prevTodos, { text: text, key: Math.random().toString() }];
     });
   };
 
+  const handlePress = (key) => {
+    setTodos((prevState) => {
+      return prevState.filter((item) => item.key !== key);
+    });
+  };
   return (
     <View style={styles.container}>
-      <Text>JAGI FAMILY</Text>
-
-      <FlatList
-        numColumns={2}
-        // keyExtractor={(item, index) => index.toString()}
-        // to remove warning about key of each list item
-        keyExtractor={(item) => item.id.toString()}
-        // this is used if there is no key property. indicate the property you want to
-        // be used as key. in this case the id like in most databases you will use
-        data={people}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => presshandler(item.id)}>
-            <Text style={styles.item}>{item.name}</Text>
-          </TouchableOpacity>
-        )}
-      />
-
-      {/* flatlists lazy loads so its better for more items on the list - performance */}
-
-      {/* <ScrollView>
-        {people.map((item) => (
-          <View key={item.key}>
-            <Text style={styles.item}>{item.name}</Text>
-          </View>
-        ))}
-      </ScrollView> */}
-
-      {/* ScrollView is fine for smaller lists and if you just need scrollability */}
+      <Header />
+      <View style={styles.content}>
+        <AddTodo handleSubmit={handleSubmit} />
+        <View style={styles.list}>
+          <FlatList
+            keyExtractor={(item) => item.key.toString()}
+            data={todos}
+            renderItem={({ item }) => (
+              <TodoItem item={item} handlePress={handlePress} />
+            )}
+          />
+        </View>
+      </View>
     </View>
   );
 }
@@ -70,17 +54,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingTop: 40,
-    paddingHorizontal: 20,
-    // alignItems: "center",
-    // justifyContent: "center",
   },
-  item: {
-    marginTop: 24,
-    padding: 30,
-    backgroundColor: "rebeccapurple",
-    fontSize: 24,
-    marginHorizontal: 10,
-    marginTop: 24,
+  content: {
+    padding: 40,
+  },
+  list: {
+    marginTop: 20,
+  },
+  textInput: {
+    borderColor: "darkgray",
   },
 });
