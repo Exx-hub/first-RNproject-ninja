@@ -73,17 +73,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    borderColor: "red",
     borderWidth: 3,
   },
   content: {
     padding: 40,
-    backgroundColor: "pink",
     flex: 1,
   },
   list: {
     marginTop: 20,
-    backgroundColor: "yellow",
     flex: 1,
   },
 });
